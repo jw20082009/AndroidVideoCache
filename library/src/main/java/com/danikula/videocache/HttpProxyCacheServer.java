@@ -3,6 +3,7 @@ package com.danikula.videocache;
 import android.content.Context;
 import android.net.Uri;
 
+import android.os.SystemClock;
 import com.danikula.videocache.file.DiskUsage;
 import com.danikula.videocache.file.FileNameGenerator;
 import com.danikula.videocache.file.Md5FileNameGenerator;
@@ -78,6 +79,9 @@ public class HttpProxyCacheServer {
             IgnoreHostProxySelector.install(PROXY_HOST, port);
             CountDownLatch startSignal = new CountDownLatch(1);
             this.waitConnectionThread = new Thread(new WaitRequestsRunnable(startSignal));
+            ProxyServerWatcher.getInstance()
+                .updateThreadStatus("WaitRequestsRunnable" + hashCode(),
+                    ProxyServerWatcher.ThreadStatus.STATUS_NEW);
             this.waitConnectionThread.start();
             startSignal.await(); // freeze thread, wait for server starts
             this.pinger = new Pinger(PROXY_HOST, port);
@@ -109,7 +113,7 @@ public class HttpProxyCacheServer {
      * If parameter {@code allowCachedFileUri} is {@code true} and file for this url is fully cached
      * (it means method {@link #isCached(String)} returns {@code true}) then file:// uri to cached file will be returned.
      *
-     * @param url                a url to file that should be cached.
+     * @param url a url to file that should be cached.
      * @param allowCachedFileUri {@code true} if allow to return file:// uri if url is fully cached
      * @return a wrapped by proxy url if file is not fully cached or url pointed to cache file otherwise (if {@code allowCachedFileUri} is {@code true}).
      */
@@ -186,7 +190,8 @@ public class HttpProxyCacheServer {
     }
 
     private String appendToProxyUrl(String url) {
-        return String.format(Locale.US, "http://%s:%d/%s", PROXY_HOST, port, ProxyCacheUtils.encode(url));
+        return String.format(Locale.US, "http://%s:%d/%s", PROXY_HOST, port,
+            ProxyCacheUtils.encode(url));
     }
 
     private File getCacheFile(String url) {
@@ -225,13 +230,21 @@ public class HttpProxyCacheServer {
     }
 
     private void processSocket(Socket socket) {
+        String key = "SocketProcessorRunnable:" + socket.hashCode();
         try {
             GetRequest request = GetRequest.read(socket.getInputStream());
             LOG.debug("Request to cache proxy:" + request);
             String url = ProxyCacheUtils.decode(request.uri);
+            ProxyServerWatcher.getInstance()
+                .updateThreadStatus(key, ProxyServerWatcher.ThreadStatus.STATUS_RUNNING);
             if (pinger.isPingRequest(url)) {
+                ProxyServerWatcher.getInstance()
+                    .updateThreadProgress(key, new ProxyServerWatcher.Progress(
+                        SystemClock.elapsedRealtime() + ":responseToPing", 0, 0));
                 pinger.responseToPing(socket);
             } else {
+                ProxyServerWatcher.getInstance()
+                    .updateThreadProgress(key, new ProxyServerWatcher.Progress("processRequest", 0, 0));
                 HttpProxyCacheServerClients clients = getClients(url);
                 clients.processRequest(request, socket);
             }
@@ -244,6 +257,8 @@ public class HttpProxyCacheServer {
         } finally {
             releaseSocket(socket);
             LOG.debug("Opened connections: " + getClientsCount());
+            ProxyServerWatcher.getInstance()
+                .updateThreadStatus(key, ProxyServerWatcher.ThreadStatus.STATUS_DEAD);
         }
     }
 
@@ -294,7 +309,9 @@ public class HttpProxyCacheServer {
                 socket.shutdownOutput();
             }
         } catch (IOException e) {
-            LOG.warn("Failed to close socket on proxy side: {}. It seems client have already closed connection.", e.getMessage());
+            LOG.warn(
+                "Failed to close socket on proxy side: {}. It seems client have already closed connection.",
+                e.getMessage());
         }
     }
 
@@ -322,8 +339,14 @@ public class HttpProxyCacheServer {
 
         @Override
         public void run() {
+            ProxyServerWatcher.getInstance()
+                .updateThreadStatus("WaitRequestsRunnable" + hashCode(),
+                    ProxyServerWatcher.ThreadStatus.STATUS_RUNNING);
             startSignal.countDown();
             waitForRequest();
+            ProxyServerWatcher.getInstance()
+                .updateThreadStatus("WaitRequestsRunnable" + hashCode(),
+                    ProxyServerWatcher.ThreadStatus.STATUS_DEAD);
         }
     }
 
@@ -452,8 +475,8 @@ public class HttpProxyCacheServer {
         }
 
         private Config buildConfig() {
-            return new Config(cacheRoot, fileNameGenerator, diskUsage, sourceInfoStorage, headerInjector);
+            return new Config(cacheRoot, fileNameGenerator, diskUsage, sourceInfoStorage,
+                headerInjector);
         }
-
     }
 }
