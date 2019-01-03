@@ -26,17 +26,20 @@ public class MenuActivity extends FragmentActivity {
 
     @AfterViews
     void onViewInjected() {
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, buildListData());
+        ListAdapter adapter =
+            new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1,
+                buildListData());
         listView.setAdapter(adapter);
     }
 
     @NonNull
     private List<ListEntry> buildListData() {
         return Arrays.asList(
-                new ListEntry("Single Video", SingleVideoActivity_.class),
-                new ListEntry("Multiple Videos", MultipleVideosActivity_.class),
-                new ListEntry("Video Gallery with pre-caching", VideoGalleryActivity_.class),
-                new ListEntry("Shared Cache", SharedCacheActivity_.class)
+            new ListEntry("Single Video", SingleVideoActivity_.class),
+            new ListEntry("Multiple Videos", MultipleVideosActivity_.class),
+            new ListEntry("Video Gallery with pre-caching", VideoGalleryActivity_.class),
+            new ListEntry("Shared Cache", SharedCacheActivity_.class),
+            new ListEntry("Priority Videos", PriorityActivity_.class)
         );
     }
 
@@ -72,5 +75,4 @@ public class MenuActivity extends FragmentActivity {
             return title;
         }
     }
-
 }
