@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * created by jw200 at 2019/1/3 17:24
@@ -33,6 +32,28 @@ public class ProxyServerWatcher {
     }
 
     LinkedHashMap<String, ThreadStatus> threadStatusMap;
+    List<ThreadStatus> threadStatuses = new ArrayList<>();
+
+    boolean updated = false;
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public List<ThreadStatus> getThreadStatusList() {
+        synchronized (threadStatuses) {
+            if (updated || (threadStatuses.size() != threadStatusMap.size())) {
+                threadStatuses.clear();
+                for (ThreadStatus status : threadStatuses) {
+                    threadStatuses.add(status);
+                }
+                updated = false;
+                return threadStatuses;
+            } else {
+                return threadStatuses;
+            }
+        }
+    }
 
     public void updateThreadStatus(String threadName, int status) {
         if (TextUtils.isEmpty(threadName)) {
@@ -53,6 +74,7 @@ public class ProxyServerWatcher {
                 threadStatusMap.put(threadName, threadStatus);
             }
             threadStatus.status = status;
+            updated = true;
         }
     }
 
@@ -92,6 +114,7 @@ public class ProxyServerWatcher {
                 }
                 threadStatus.progressList.add(progress);
             }
+            updated = true;
         }
     }
 
@@ -121,6 +144,7 @@ public class ProxyServerWatcher {
                 threadStatus.subThread.name = subThreadName;
                 threadStatus.subThread.status = status;
             }
+            updated = true;
         }
     }
 
@@ -170,6 +194,7 @@ public class ProxyServerWatcher {
                 threadStatus.subThread.progressList = new ArrayList<>();
                 threadStatus.subThread.progressList.add(progress);
             }
+            updated = true;
         }
     }
 

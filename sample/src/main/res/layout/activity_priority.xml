@@ -1,90 +1,108 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCC"
-    android:orientation="vertical"
-    android:padding="8dp"
     >
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:background="#CCC"
+        android:orientation="vertical"
+        android:padding="8dp"
         >
 
-        <FrameLayout
-            android:id="@+id/videoContainer0"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#FFF"
-            />
+            android:orientation="horizontal"
+            >
 
-        <FrameLayout
-            android:id="@+id/videoContainer1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
+            <FrameLayout
+                android:id="@+id/videoContainer0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+            <FrameLayout
+                android:id="@+id/videoContainer1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#FFF"
-            />
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:id="@+id/videoContainer2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+            <FrameLayout
+                android:id="@+id/videoContainer3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:id="@+id/videoContainer4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+            <FrameLayout
+                android:id="@+id/videoContainer5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        >
+        android:layout_height="match_parent"
+        ></FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/videoContainer2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="#FFF"
-            />
-
-        <FrameLayout
-            android:id="@+id/videoContainer3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="#FFF"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        >
-
-        <FrameLayout
-            android:id="@+id/videoContainer4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="#FFF"
-            />
-
-        <FrameLayout
-            android:id="@+id/videoContainer5"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:background="#FFF"
-            />
-
-    </LinearLayout>
-
-</LinearLayout>
+    <Button
+        android:id="@+id/threadWatcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="watcher"
+        android:textSize="10dp"
+        />
+</FrameLayout>
